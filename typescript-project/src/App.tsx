@@ -5,7 +5,6 @@ import TodoList from "./components/TodoList";
 import { Todo } from "./components/model";
 
 
-
 const App: React.FC = () => {
 
   const [todo, setTodo] = useState<string>("");
