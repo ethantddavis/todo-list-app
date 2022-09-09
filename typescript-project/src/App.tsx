@@ -3,6 +3,7 @@ import './App.css';
 import InputFeild from "./components/InputFeild";
 import TodoList from "./components/TodoList";
 import { Todo } from "./components/model";
+import { abi } from "../hardhat/artifacts/contracts/TodoList.sol/TodoList.json"; 
 
 
 const App: React.FC = () => {
