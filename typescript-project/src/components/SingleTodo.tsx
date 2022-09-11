@@ -5,7 +5,7 @@ import { MdDone } from "react-icons/md";
 import "./styles.css";
 import TodoList from "./TodoList";
 import { ethers } from "ethers";
-
+ 
 type Props = {
     todo: Todo,
     todos: Todo[],

@@ -12,7 +12,7 @@ const InputFeild: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
     
     return (
         <form className="input" onSubmit={(e) => {
-            handleAdd(e)
+            handleAdd(e) 
             inputRef.current?.blur();
         }}>
             <input 
