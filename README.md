@@ -8,12 +8,14 @@ todo list smart contract and tests written in solidity using Foundry smart contr
 deploy script made using Hardhat.
 
 # run project
-to run frontend todo list, run "npm start" in typescript-project
-
 to test contracts, run "forge test" in typescript-project/foundry
 
 to deploy contract, run "npx hardhat run --network goreli scripts/deploy.ts" in typescript-project/hardhat
 
+before running react frontend, run "cp hardhat/artifacts/contracts/TodoList.sol/TodoList.json src" in typescript-project
+
+to run react frontend, run "npm start" in typescript-project
+
 # deployments
-last contract deployed on goreli at 0xe9BC0238AF81741129dBE08b3d6AD608cEbcB0e2
+last contract deployed on goreli at 0xaA3bcffb2599dfF278C8121E260107e307744404
 

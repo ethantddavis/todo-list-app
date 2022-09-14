@@ -3,13 +3,11 @@ import { Todo } from "./model";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "./styles.css";
-import TodoList from "./TodoList";
-import { ethers } from "ethers";
  
 type Props = {
     todo: Todo,
     todos: Todo[],
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>
 }
 
 const SingleTodo = ({todo, todos, setTodos}: Props) => {
@@ -32,7 +30,7 @@ const SingleTodo = ({todo, todos, setTodos}: Props) => {
     const handleEdit = (e: React.FormEvent, id: number) => {
         e.preventDefault();
         setTodos(
-            todos.map((todo) => (todo.id === id? { ... todo, todo: editTodo}: todo))
+            todos.map((todo) => (todo.id === id? { ...todo, todo: editTodo}: todo))
         );
         setEdit(false);
     }

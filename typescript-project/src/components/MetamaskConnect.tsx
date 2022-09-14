@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./styles.css";
 import { ethers } from "ethers";
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const MetamaskConnect = ({currentAccount, chainName, setCurrentAccount}: Props) => {
-
+    
     const onClickConnect = () => {
         if (!window.ethereum) {
             console.log("please install MetaMask");
@@ -31,7 +31,7 @@ const MetamaskConnect = ({currentAccount, chainName, setCurrentAccount}: Props) 
         <div className="metamaskConnect">
             <div className="accountInfo">
                 {currentAccount 
-                    ? <p>{currentAccount}<br/>Network: {chainName}</p>
+                    ? <p>Address: {currentAccount}<br/>Network: {chainName}</p>
                     : <></>
                 }
             </div>
