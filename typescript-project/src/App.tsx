@@ -5,6 +5,7 @@ import InputFeild from "./components/InputFeild";
 import TodoList from "./components/TodoList";
 import { Todo } from "./components/model";
 import { ethers } from "ethers";
+import contractJson from "./TodoList.json";
 
 const App: React.FC = () => {
 
@@ -12,43 +13,57 @@ const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [currentAccount, setCurrentAccount] = useState<string | undefined>(undefined);
   const [chainName, setChainName] = useState<string | undefined>(undefined);
+
   var provider = useRef<ethers.providers.Web3Provider | undefined>(undefined);
+  var todoListContract = useRef<ethers.Contract | undefined>(undefined);
+
+  const contractAddress = "0xaA3bcffb2599dfF278C8121E260107e307744404";
 
   useEffect(() => {
-    if (!currentAccount || !ethers.utils.isAddress(currentAccount)) return;
-    // client side code
-    if (!window.ethereum) return;
+    if (!currentAccount || !ethers.utils.isAddress(currentAccount)) return; // prompt?
+    if (!window.ethereum) return; // prompt?
+
     provider.current = new ethers.providers.Web3Provider(window.ethereum, "any");
     provider.current.on("network", (newNetwork, oldNetwork) => {
-      // reload page on network switch
-      if (oldNetwork) {
-          window.location.reload();
-      }
+      
+      // reload page on network change
+      if (oldNetwork) window.location.reload();
+
       // set network name
-      let tempChainName: string = "";
-      if (newNetwork.chainId === 1) {
-          tempChainName = "Ethereum Mainnet";
-      } else {
-          tempChainName = newNetwork.name;
-      }
+      let tempChainName = "";
+      newNetwork.chainId === 1 ?
+        tempChainName = "Ethereum Mainnet" 
+        : tempChainName = newNetwork.name;
+
       // notify wrong network
-      console.log(newNetwork.chainId);
-      if (newNetwork.chainId !== 5) {
-          tempChainName += " WARNING! Switch network to Goerli Testnet"
-      }
+      if (newNetwork.chainId !== 5) tempChainName += " WARNING! Switch network to Goerli Testnet";
+      
       setChainName(tempChainName);
     });
+    
+    initilizeContract();
   }, [currentAccount]);
 
-  const handleAdd = (e: React.FormEvent) => {
+  const initilizeContract = async() => {
+    if (provider.current) {
+      todoListContract.current = new ethers.Contract(contractAddress, contractJson["abi"], provider.current.getSigner());
+    }
+  }
+
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (todo) {
-      setTodos([...todos, {id: Date.now(), todo: todo, isDone: false}])
+      const newId = Date.now();
+      setTodos([...todos, {id: newId, todo: todo, isDone: false}])
       setTodo("");
 
+      // send ID and content to contract
+      if (todoListContract.current) {
+        await todoListContract.current.createTodo(newId, todo).send;
+      }
     }
-  };
+  }
 
   return (
     <div className="App">
@@ -59,7 +74,7 @@ const App: React.FC = () => {
       />
       <span className="heading">Todo Dapp</span>
       <InputFeild todo={todo} setTodo={setTodo} handleAdd={handleAdd}/>
-      <TodoList todos={todos} setTodos={setTodos}/>
+      <TodoList todos={todos} setTodos={setTodos} todoListContract={todoListContract}/>
     </div>
   );
 }
