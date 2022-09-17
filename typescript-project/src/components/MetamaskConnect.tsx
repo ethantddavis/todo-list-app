@@ -25,6 +25,7 @@ const MetamaskConnect = ({currentAccount, chainName, setCurrentAccount}: Props) 
     
     const onClickDisconnect = () => {
         setCurrentAccount(undefined);
+        window.location.reload();
     }
 
     return (

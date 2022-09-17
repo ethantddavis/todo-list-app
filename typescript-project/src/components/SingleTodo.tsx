@@ -44,9 +44,8 @@ const SingleTodo = ({todo, todos, setTodos, todoListContract}: Props) => {
         );
         setEdit(false);
 
-        // send edited content to contract
         if (todoListContract.current) {
-            await todoListContract.current.editTodo(id, todos[id]).send;
+            await todoListContract.current.editTodo(id, editTodo).send;
         }
     }
 
@@ -71,7 +70,7 @@ const SingleTodo = ({todo, todos, setTodos, todoListContract}: Props) => {
                 <span className="todos_single--text">{ todo.todo }</span>
             )}
             
-            <div>
+            <div id="icons">
                 <span className="icon" onClick={() => {
                     if (!edit && !todo.isDone) {
                         setEdit(!edit)

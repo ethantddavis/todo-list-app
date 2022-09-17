@@ -20,8 +20,8 @@ const App: React.FC = () => {
   const contractAddress = "0xaA3bcffb2599dfF278C8121E260107e307744404";
 
   useEffect(() => {
-    if (!currentAccount || !ethers.utils.isAddress(currentAccount)) return; // prompt?
-    if (!window.ethereum) return; // prompt?
+    if (!currentAccount || !ethers.utils.isAddress(currentAccount)) return; 
+    if (!window.ethereum) return; 
 
     provider.current = new ethers.providers.Web3Provider(window.ethereum, "any");
     provider.current.on("network", (newNetwork, oldNetwork) => {
@@ -36,12 +36,17 @@ const App: React.FC = () => {
         : tempChainName = newNetwork.name;
 
       // notify wrong network
-      if (newNetwork.chainId !== 5) tempChainName += " WARNING! Switch network to Goerli Testnet";
-      
-      setChainName(tempChainName);
+      if (newNetwork.chainId !== 5) {
+        setChainName("Switch network to Goerli Testnet to interact with contract (currently " 
+          + tempChainName
+          + ")"
+        );
+      } else {
+        setChainName("Goerli");
+        initilizeContract();
+        getPriorTodos();
+      }
     });
-    
-    initilizeContract();
   }, [currentAccount]);
 
   const initilizeContract = async() => {
@@ -52,16 +57,31 @@ const App: React.FC = () => {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (todo) {
       const newId = Date.now();
-      setTodos([...todos, {id: newId, todo: todo, isDone: false}])
+      setTodos([...todos, {id: newId, todo: todo, isDone: false}]);
       setTodo("");
 
       // send ID and content to contract
       if (todoListContract.current) {
         await todoListContract.current.createTodo(newId, todo).send;
       }
+    }
+  }
+
+  const getPriorTodos = async () => {
+    if (todoListContract.current) {
+      const ids = await todoListContract.current.getIds(currentAccount);
+      const oldTodos: Todo[] = [];
+
+      for (var i = 0; i < ids.length; i++) {
+        const content = await todoListContract.current.getContent(ids[i]);
+        const done = await todoListContract.current.isCompleted(ids[i]);
+        
+        oldTodos.push({id: ids[i].toNumber(), todo: content, isDone: done});
+      }
+
+      setTodos(oldTodos);
     }
   }
 

@@ -12,7 +12,9 @@ to test contracts, run "forge test" in typescript-project/foundry
 
 to deploy contract, run "npx hardhat run --network goreli scripts/deploy.ts" in typescript-project/hardhat
 
-before running react frontend, run "cp hardhat/artifacts/contracts/TodoList.sol/TodoList.json src" in typescript-project
+if new deploy, running react frontend, run "cp hardhat/artifacts/contracts/TodoList.sol/TodoList.json src" in typescript-project
+
+update contractAddress in typescript-project/src/App.tsx
 
 to run react frontend, run "npm start" in typescript-project
 
