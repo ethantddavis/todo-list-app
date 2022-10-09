@@ -27,7 +27,7 @@ contract TodoList {
     function completeTodo(uint256 id) external {
         require(todos[id].owner == msg.sender);
 
-        todos[id].completed = true;
+        todos[id].completed = !todos[id].completed;
     }
 
     function getOwner(uint256 id) external view returns (address) {

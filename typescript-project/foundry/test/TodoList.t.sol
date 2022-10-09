@@ -83,4 +83,13 @@ contract TodoListTest is Test {
 
         assertEq(todoList.isCompleted(1), true);
     }
+
+    function testCompleteTodoReverseComplete() public {
+        todoList.createTodo(1, "Feed the dog");
+
+        todoList.completeTodo(1);
+        todoList.completeTodo(1);
+
+        assertEq(todoList.isCompleted(1), false);
+    }
 }

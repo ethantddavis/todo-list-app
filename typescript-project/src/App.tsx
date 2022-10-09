@@ -21,7 +21,7 @@ const App: React.FC = () => {
     baseURL: `http://localhost:3000/transactions/`
   }));
 
-  const contractAddress = "0xaA3bcffb2599dfF278C8121E260107e307744404";
+  const contractAddress = "0x083D34c0CD59957920CAd94c877d57E79408aBE6";
 
   useEffect(() => {
     
