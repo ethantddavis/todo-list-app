@@ -14,7 +14,7 @@ db.once('open', () => console.log("Connected to database"));
 
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3001'
+  origin: process.env.FRONTEND_URL
 }));
 app.use('/transactions', transactionsRouter);
 
