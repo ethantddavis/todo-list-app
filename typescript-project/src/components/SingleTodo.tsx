@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Todo } from "./model";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { AiFillEdit, AiFillEyeInvisible } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "./styles.css";
 import { ethers } from "ethers";
+import { AxiosInstance } from "axios";
  
 type Props = {
     todo: Todo,
     todos: Todo[],
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
-    todoListContract: React.MutableRefObject<ethers.Contract | undefined>
+    todoListContract: React.MutableRefObject<ethers.Contract | undefined>,
+    serverApi: React.MutableRefObject<AxiosInstance>
 }
 
-const SingleTodo = ({todo, todos, setTodos, todoListContract}: Props) => {
+const SingleTodo = ({todo, todos, setTodos, todoListContract, serverApi}: Props) => {
     
     const [edit, setEdit] = useState<boolean>(false);
     const [editTodo, setEditTodo] = useState<string>(todo.todo);
@@ -20,32 +22,43 @@ const SingleTodo = ({todo, todos, setTodos, todoListContract}: Props) => {
     const handleDone = async (id: number) => {
         setTodos(todos.map((todo) => 
             todo.id === id ? {...todo, isDone: !todo.isDone}: todo
-        ))
+        ));
 
         // change contract to complete
         if (todoListContract.current) {
-            await todoListContract.current.completeTodo(id).send;
+            const transaction = await todoListContract.current.completeTodo(id);
+            const receipt = await transaction.wait();
+        
+            let res = await serverApi.current.post('/', {
+                timestamp: id,
+                userAddress: receipt.from,
+                transactionHash: receipt.transactionHash,
+                transactionType: "complete"
+            });
+            console.log(res);
         }
     }
 
     const handleDelete = async (id: number) => {
         setTodos(todos.filter((todo) => todo.id !== id));
-
-        // change contract to complete
-        if (todoListContract.current) {
-            await todoListContract.current.completeTodo(id).send;
-        }
     }
 
     const handleEdit = async (e: React.FormEvent, id: number) => {
         e.preventDefault();
-        setTodos(
-            todos.map((todo) => (todo.id === id? { ...todo, todo: editTodo}: todo))
-        );
+        setTodos(todos.map((todo) => (todo.id === id? { ...todo, todo: editTodo}: todo)));
         setEdit(false);
 
         if (todoListContract.current) {
-            await todoListContract.current.editTodo(id, editTodo).send;
+            const transaction = await todoListContract.current.editTodo(id, editTodo);
+            const receipt = await transaction.wait();
+        
+            let res = await serverApi.current.post('/', {
+                timestamp: id,
+                userAddress: receipt.from,
+                transactionHash: receipt.transactionHash,
+                transactionType: "edit"
+            });
+            console.log(res);
         }
     }
 
@@ -79,7 +92,7 @@ const SingleTodo = ({todo, todos, setTodos, todoListContract}: Props) => {
                     <AiFillEdit />
                 </span>
                 <span className="icon" onClick={() => handleDelete(todo.id)}>
-                    <AiFillDelete />
+                    <AiFillEyeInvisible />
                 </span>
                 <span className="icon" onClick={() => handleDone(todo.id)}>
                     <MdDone />

@@ -1,0 +1,22 @@
+GET http://localhost:3000/transactions
+###
+GET http://localhost:3000/transactions/633e37d8590838551142346f
+###
+POST http://localhost:3000/transactions
+Content-Type: application/json
+
+{
+    "timestamp": "1663209226927",
+    "userAddress": "0x7374DDf849566c28372AD830DA45a1c9D088453B",
+    "transactionHash": "0xdcfd2acaaad6b71d0d4f75a5c101b778ee25dd1a66550aa8f1374be14629c9f0",
+    "transactionType": "create"
+}
+###
+DELETE http://localhost:3000/transactions/633e37d95908385511423471
+###
+PATCH http://localhost:3000/transactions/633e37da5908385511423473
+Content-Type: application/json
+
+{
+    "userAddress": "0x0"
+}
