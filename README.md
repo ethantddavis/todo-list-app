@@ -4,7 +4,7 @@
 A simple To-Do list where a user can create todo items, edit todo items, mark items as complete, and hide todo items. User must first connect their ethereum wallet (currently Goerli testnet). If a wallet has previoulsy used this app, the page will populate with previoulsy created todo items, and will indicate whether they have been completed. Every create, edit, and complete action will initiate a smart contract transaction. Upon every confirmed transaction, the timestamp (item created), user wallet address, transaction hash, and transaction type (create, edit, complete) is sent to the REST api and recorded in a mongo database.
 
 # development process/stack
-react frontend initially created from tutorial "React & TypeScript - Course for Beginners" by freeCodeCamp.org on YouTube.
+frontend created using TypeScript and React.
 
 todo list smart contract and tests written in solidity using Foundry smart contract development toolchain.
 
